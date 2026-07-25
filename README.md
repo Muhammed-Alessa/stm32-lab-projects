@@ -1,8 +1,6 @@
 # NUCLEO-F446RE STM32F446RET6 Projects
 
 
-targets the **NUCLEO-L476RG**. 
-
 Each project contains:
 
 - `README.md`
