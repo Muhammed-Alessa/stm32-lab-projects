@@ -1,8 +1,7 @@
 # NUCLEO-F446RE STM32F446RET6 Projects
 
-A flat, GitHub-friendly collection based on the project sequence in Dogan Ibrahim's *Nucleo Boards Programming with the STM32CubeIDE*.
 
-The book targets the **NUCLEO-L476RG**. Here, the descriptions and code are independently rewritten and adapted for the **NUCLEO-F446RE / STM32F446RET6** using STM32CubeIDE and the STM32CubeF4 HAL.
+targets the **NUCLEO-L476RG**. 
 
 Each project contains:
 
