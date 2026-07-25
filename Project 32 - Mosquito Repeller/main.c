@@ -1,0 +1,78 @@
+/*
+ * Mosquito Repeller
+ * Target: NUCLEO-F446RE / STM32F446RET6
+ * Framework: STM32CubeF4 HAL
+ *
+ * Independently rewritten for the F446RE board.
+ * This is not a copy of the book's program listing.
+ */
+#include "stm32f4xx_hal.h"
+#include <stdint.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+
+static void SystemClock_Config(void)
+{
+    RCC_OscInitTypeDef osc = {0};
+    RCC_ClkInitTypeDef clk = {0};
+
+    __HAL_RCC_PWR_CLK_ENABLE();
+
+    osc.OscillatorType = RCC_OSCILLATORTYPE_HSI;
+    osc.HSIState = RCC_HSI_ON;
+    osc.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
+    osc.PLL.PLLState = RCC_PLL_NONE;
+    if (HAL_RCC_OscConfig(&osc) != HAL_OK) {
+        while (1) {}
+    }
+
+    clk.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK |
+                    RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
+    clk.SYSCLKSource = RCC_SYSCLKSOURCE_HSI;
+    clk.AHBCLKDivider = RCC_SYSCLK_DIV1;
+    clk.APB1CLKDivider = RCC_HCLK_DIV1;
+    clk.APB2CLKDivider = RCC_HCLK_DIV1;
+    if (HAL_RCC_ClockConfig(&clk, FLASH_LATENCY_0) != HAL_OK) {
+        while (1) {}
+    }
+}
+
+static TIM_HandleTypeDef htim2;
+
+static void PWM_Init(uint32_t period, uint32_t pulse)
+{
+    GPIO_InitTypeDef g = {0};
+    TIM_OC_InitTypeDef oc = {0};
+
+    __HAL_RCC_GPIOB_CLK_ENABLE();
+    __HAL_RCC_TIM2_CLK_ENABLE();
+
+    g.Pin = GPIO_PIN_3;
+    g.Mode = GPIO_MODE_AF_PP;
+    g.Pull = GPIO_NOPULL;
+    g.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+    g.Alternate = GPIO_AF1_TIM2;
+    HAL_GPIO_Init(GPIOB, &g);
+
+    htim2.Instance = TIM2;
+    htim2.Init.Prescaler = 15;   /* 16 MHz / 16 = 1 MHz */
+    htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
+    htim2.Init.Period = period;
+    htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+    HAL_TIM_PWM_Init(&htim2);
+
+    oc.OCMode = TIM_OCMODE_PWM1;
+    oc.Pulse = pulse;
+    oc.OCPolarity = TIM_OCPOLARITY_HIGH;
+    oc.OCFastMode = TIM_OCFAST_DISABLE;
+    HAL_TIM_PWM_ConfigChannel(&htim2, &oc, TIM_CHANNEL_2);
+    HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_2);
+}
+
+int main(void)
+{
+    HAL_Init(); SystemClock_Config(); PWM_Init(24,12);
+    while (1) { __WFI(); }
+}
