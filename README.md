@@ -5,9 +5,8 @@ Each project contains:
 
 - `README.md`
 - `main.c`
-- `images/` for your own breadboard photo later
+- `images/` 
 
-No images from the book are included.
 
 ## F446RE pin conventions used here
 
