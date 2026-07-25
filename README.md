@@ -86,4 +86,3 @@ The small GPIO, ADC, DAC, PWM, UART, I2C, SPI, interrupt, and low-power examples
 
 Some advanced projects—especially DMA variants and X-NUCLEO/X-CUBE middleware—are intentionally CubeMX-assisted because DMA/BSP initialization depends on the STM32CubeF4 and expansion-pack version installed on your PC.
 
-Treat each project as a clean portfolio starting point: build it on the real board, verify it, then add your own breadboard photo.
